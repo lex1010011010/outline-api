@@ -1,11 +1,24 @@
 package outline
 
-type OutlineAPI interface {
-	All() ([]map[string]interface{}, error)
-	ChangePassword(id int, newPassword string) (bool, error)
-	Rename(id int, newName string) (bool, error)
-	AllActive() (map[string]int64, error)
-	New(label string) (map[string]interface{}, error)
+import (
+	"net/http"
+	"time"
+)
+
+type ManagerInterface interface {
+	NewManager()
+	ServerInfo() (ServerInfo, error)
+	ChangeHostname(newHostname string) error
+	RenameServer(newName string) error
+	EnableMetrics(MetricsEnabled bool) error
+}
+
+// Manager structure for Manager instance
+type Manager struct {
+	apiURL  string
+	apiCrt  string
+	timeout time.Duration
+	client  *http.Client
 }
 
 // ServerInfo structure for storing server-related data
