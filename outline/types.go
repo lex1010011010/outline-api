@@ -5,14 +5,6 @@ import (
 	"time"
 )
 
-type ManagerInterface interface {
-	NewManager()
-	ServerInfo() (ServerInfo, error)
-	ChangeHostname(newHostname string) error
-	RenameServer(newName string) error
-	EnableMetrics(MetricsEnabled bool) error
-}
-
 // Manager structure for Manager instance
 type Manager struct {
 	apiURL  string
@@ -30,4 +22,9 @@ type ServerInfo struct {
 	Version               string `json:"version"`
 	PortForNewAccessKeys  int    `json:"portForNewAccessKeys"`
 	HostnameForAccessKeys string `json:"hostnameForAccessKeys"`
+}
+
+// MetricsState structure for storing metrics
+type MetricsState struct {
+	MetricsEnabled bool `json:"metricsEnabled"`
 }
