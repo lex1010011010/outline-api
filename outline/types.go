@@ -15,11 +15,14 @@ type Manager struct {
 
 // ServerInfo structure for storing server-related data
 type ServerInfo struct {
-	Name                  string `json:"name"`
-	ServerId              string `json:"serverId"`
-	MetricsEnabled        bool   `json:"metricsEnabled"`
-	CreatedTimestampMs    int64  `json:"createdTimestampMs"`
-	Version               string `json:"version"`
+	Name               string `json:"name"`
+	ServerId           string `json:"serverId"`
+	MetricsEnabled     bool   `json:"metricsEnabled"`
+	CreatedTimestampMs int64  `json:"createdTimestampMs"`
+	Version            string `json:"version"`
+	AccessKeyDataLimit struct {
+		Bytes int `json:"bytes"`
+	} `json:"accessKeyDataLimit"`
 	PortForNewAccessKeys  int    `json:"portForNewAccessKeys"`
 	HostnameForAccessKeys string `json:"hostnameForAccessKeys"`
 }

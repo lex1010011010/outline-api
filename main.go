@@ -17,6 +17,19 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	err = manager.UpdateDefaultPort(4444)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = manager.UpdateDataLimit(22)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = manager.DeleteDataLimit()
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	severInfo, err := manager.GetServerInfo()
 	if err != nil {
