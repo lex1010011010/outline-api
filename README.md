@@ -13,6 +13,8 @@ go get github.com/lex1010011010/outline-api
 ## Usage
 
 ```go
+package main
+
 import (
     "github.com/lex1010011010/outline-api"
     "time"
