@@ -195,7 +195,11 @@ func (m *Manager) UpdateDataLimit(dataLimit int) error {
 	}
 
 	// Create JSON payload
-	payload := map[string]interface{}{"limit": map[string]int{"bytes": dataLimit}}
+	payload := map[string]map[string]int{
+		"limit": {
+			"bytes": dataLimit,
+		},
+	}
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
 		return err
@@ -257,5 +261,92 @@ func (m *Manager) DeleteDataLimit() error {
 		return nil
 	default:
 		return fmt.Errorf("unexpected status code %d", resp.StatusCode)
+	}
+}
+
+// CreateNewAccessKey creates a new access key with an optional "method" field in the request body.
+func (m *Manager) CreateNewAccessKey(method ...string) (*AccessKey, error) {
+	// Build the URL for creating a new access key
+	url := fmt.Sprintf(AccessKeysURL, m.apiURL)
+
+	// Create a map for the request body with a default "method" value
+	payload := map[string]string{"method": ""}
+
+	// If a custom "method" value is provided, overwrite the default
+	if len(method) > 0 {
+		payload["method"] = method[0]
+	}
+
+	// Marshal the request data to JSON
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a new HTTP request with the JSON data in the body
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	// Perform the POST request
+	resp, err := m.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
+			err = fmt.Errorf("failed to close response body: %v", closeErr)
+		}
+	}()
+
+	// Handle the response based on the status code
+	switch resp.StatusCode {
+	case http.StatusCreated:
+		// Parse the response body and return the result
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		var result *AccessKey
+		err = json.Unmarshal(body, &result)
+		if err != nil {
+			return nil, err
+		}
+		return result, nil
+	default:
+		return nil, fmt.Errorf("unexpected status code %d", resp.StatusCode)
+	}
+}
+
+// GetAccessKeys retrieves a list of access keys.
+func (m *Manager) GetAccessKeys() (*AccessKeys, error) {
+	// Build the URL for listing access keys
+	url := fmt.Sprintf(AccessKeysURL, m.apiURL)
+
+	// Perform a GET request to retrieve the list of access keys
+	resp, err := m.client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil && err == nil {
+			err = fmt.Errorf("failed to close response body: %v", closeErr)
+		}
+	}()
+
+	// Handle the response based on the status code
+	switch resp.StatusCode {
+	case http.StatusOK:
+		// Parse the response body and return the list of access keys
+		var keys AccessKeys
+		decoder := json.NewDecoder(resp.Body)
+		if err := decoder.Decode(&keys); err != nil {
+			return nil, err
+		}
+		return &keys, nil
+	default:
+		return nil, fmt.Errorf("unexpected status code %d", resp.StatusCode)
 	}
 }

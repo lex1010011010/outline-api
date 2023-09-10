@@ -11,5 +11,6 @@ type ManagerInterface interface {
 	UpdateDataLimit(dataLimit int) error
 	DeleteDataLimit() error
 
-	CreatesNewAccessKey()
+	CreateNewAccessKey(method ...string) (*AccessKey, error)
+	GetAccessKeys() (AccessKeys, error)
 }

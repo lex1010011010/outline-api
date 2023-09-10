@@ -7,4 +7,5 @@ const (
 	MetricsURL              = "%s/metrics/enabled"                 //Enables or disables sharing of metrics
 	PortForNewAccessKeysURL = "%s/server/port-for-new-access-keys" //Changes the default port for newly created access
 	AccessKeyDataLimitURL   = "%s/server/access-key-data-limit"    //Access Key data limits actions
+	AccessKeysURL           = "%s/access-keys"
 )

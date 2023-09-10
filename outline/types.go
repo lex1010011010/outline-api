@@ -31,3 +31,18 @@ type ServerInfo struct {
 type MetricsState struct {
 	MetricsEnabled bool `json:"metricsEnabled"`
 }
+type AccessKeys struct {
+	AccessKeys []AccessKey `json:"accessKeys"`
+}
+
+type AccessKey struct {
+	Id        string `json:"id"`
+	Name      string `json:"name"`
+	Password  string `json:"password"`
+	Port      int    `json:"port"`
+	Method    string `json:"method"`
+	DataLimit struct {
+		Bytes int64 `json:"bytes"`
+	} `json:"dataLimit,omitempty"`
+	AccessUrl string `json:"accessUrl"`
+}
